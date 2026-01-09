@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N4!TR0 07's Funny Terminal</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark macOS-like background */
+            color: #ffffff; /* White text for readability */
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace; /* Mac terminal font style */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .terminal {
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 800px;
+            height: 60%;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .title-bar {
+            background-color: #3a3a3a;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .buttons {
+            display: flex;
+        }
+        .button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .close { background-color: #ff5f57; }
+        .minimize { background-color: #ffbd2e; }
+        .maximize { background-color: #28ca41; }
+        .content {
+            margin-top: 25px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            animation: typing 3s steps(40, end);
+            overflow: hidden;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="title-bar">
+            <div class="buttons">
+                <div class="button close"></div>
+                <div class="button minimize"></div>
+                <div class="button maximize"></div>
+            </div>
+        </div>
+        <div class="content" id="output"></div>
+    </div>
+    <script>
+        const jokes = [
+            "Why do programmers always mix up Halloween and Christmas? \nBecause Oct 31 == Dec 25!",
+            "How many programmers does it take to change a light bulb? \nNone, that's a hardware problem.",
+            "Why did the programmer quit his job? \nHe didn't get arrays.",
+            "A programmer's wife tells him: 'Run to the store and pick up a loaf of bread. If they have eggs, get a dozen.' \nThe programmer comes home with 12 loaves of bread.",
+            "Why don't programmers like nature? \nIt has too many bugs."
+        ];
+
+        function getRandomJoke() {
+            const index = Math.floor(Math.random() * jokes.length);
+            return jokes[index];
+        }
+
+        const output = document.getElementById('output');
+        output.textContent = `Last login: ${new Date().toLocaleString()} on console
+
+Welcome to N4!TR0 07's super secret terminal!
+
+Hacking into the mainframe... Just kidding!
+
+Here's a random programmer joke to make you LOL:
+
+${getRandomJoke()}
+
+Refresh the page for another joke! Or close this 'window' if you're not amused. 😎
+`;
+    </script>
+</body>
+</html>
