@@ -113,4 +113,4 @@ Now we have root! We can read both `/home/robot/key-2-of-3.txt` and `/root/key-3
 2. **Key 2:** `82292b...` (Robot Home Directory)
 3. **Key 3:** `04a8b7...` (Root Directory)
 
-Mission accomplished! 😎
+Mission accomplished!

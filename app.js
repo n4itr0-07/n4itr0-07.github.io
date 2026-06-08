@@ -543,7 +543,11 @@
 
         } catch (error) {
             console.error('Failed to load writeup content:', error);
-            showError(`Failed to load writeup content from ${writeup.path}.`);
+            let errMsg = `Failed to load writeup content from ${writeup.path}.`;
+            if (window.location.protocol === 'file:') {
+                errMsg += `<br><br><strong>Security restriction (CORS):</strong> Modern browsers block loading files dynamically when using the <code>file://</code> protocol directly. To view writeups locally, you must run a local web server (for example, run <code>npx http-server</code> or <code>python -m http.server</code> in this folder) and visit the local port, or push your changes to GitHub to view it live on your GitHub Pages site.`;
+            }
+            showError(errMsg);
         }
     }
 
