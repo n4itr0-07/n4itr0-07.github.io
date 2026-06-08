@@ -28,27 +28,28 @@ layout: default
   </div>
 
   <aside class="right-sidebar">
-    <div class="sidebar-section">
-      <h3 class="sidebar-heading">Recently Updated</h3>
-      <ul class="recent-posts-list">
+    <div class="right-sidebar-section">
+      <h3>Recently Updated</h3>
+      <div class="recent-posts-list">
         {% for post in site.posts limit:3 %}
-        <li>
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <a href="{{ post.url | relative_url }}" class="recent-post-item">
+          <span class="recent-post-title">{{ post.title }}</span>
           <span class="recent-post-date">{{ post.date | date: "%b %d, %Y" }}</span>
-        </li>
+        </a>
         {% endfor %}
-      </ul>
+      </div>
     </div>
 
-    <div class="sidebar-section">
-      <h3 class="sidebar-heading">Trending Tags</h3>
-      <div class="tag-cloud">
+    <div class="right-sidebar-section">
+      <h3>Trending Tags</h3>
+      <div class="trending-tags">
         {% for tag in site.tags %}
-        <a href="/tags/#{{ tag[0] | slugify }}" class="tag-pill">
-          {{ tag[0] }}<sup>{{ tag[1].size }}</sup>
+        <a href="/tags/#{{ tag[0] | slugify }}" class="tag-chip">
+          {{ tag[0] }}<span class="tag-count">{{ tag[1].size }}</span>
         </a>
         {% endfor %}
       </div>
     </div>
   </aside>
 </div>
+

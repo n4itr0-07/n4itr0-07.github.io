@@ -119,13 +119,15 @@
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 20px;
   font-size: 12px;
   text-decoration: none;
   transition: all 0.15s ease;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .tag-chip:hover {
@@ -134,6 +136,23 @@
   background: rgba(124, 58, 237, 0.08);
   text-decoration: none;
 }
+
+.tag-count {
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.tag-chip:hover .tag-count {
+  background: var(--accent);
+  color: white;
+  opacity: 1;
+}
+
 
 .card-thumbnail {
   display: flex;
@@ -149,8 +168,12 @@
   color: var(--accent);
 }
 
-// Category rows for categories page
-.category-row {
+// Category sections and rows for categories page
+.category-section {
+  margin-bottom: 16px;
+}
+
+summary.category-row {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -160,20 +183,26 @@
   background: var(--surface);
   color: var(--text);
   text-decoration: none;
-  margin-bottom: 8px;
   transition: all 0.15s ease;
   cursor: pointer;
+  list-style: none; /* Hide default marker */
+  user-select: none;
 }
 
-.category-row:hover {
+summary.category-row::-webkit-details-marker {
+  display: none; /* Hide default marker in Safari */
+}
+
+summary.category-row:hover {
   border-color: var(--accent);
   background: var(--surface-2);
   text-decoration: none;
 }
 
-.category-row .folder-icon {
+summary.category-row .folder-icon {
   color: var(--accent);
   display: flex;
+  align-items: center;
 }
 
 .category-name {
@@ -190,7 +219,17 @@
 
 .category-arrow {
   color: var(--text-muted);
-  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.category-arrow svg {
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+details.category-section[open] .category-arrow svg {
+  transform: rotate(180deg);
 }
 
 .category-posts {
@@ -199,6 +238,7 @@
   flex-direction: column;
   gap: 12px;
 }
+
 
 // Tags page
 .tag-cloud {

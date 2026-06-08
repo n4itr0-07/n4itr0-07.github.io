@@ -10,24 +10,26 @@ layout: default
 {% assign cat_name = category[0] %}
 {% assign cat_posts = category[1] %}
 
-<a href="#{{ cat_name | slugify }}" class="category-row" id="{{ cat_name | slugify }}">
-  <span class="category-row-icon">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-    </svg>
-  </span>
-  <span class="category-row-name">{{ cat_name }}</span>
-  <span class="category-row-count">{{ cat_posts.size }} post{% if cat_posts.size != 1 %}s{% endif %}</span>
-  <span class="category-row-chevron">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
-  </span>
-</a>
+<details class="category-section" id="{{ cat_name | slugify }}" open>
+  <summary class="category-row">
+    <span class="folder-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </span>
+    <span class="category-name">{{ cat_name }}</span>
+    <span class="post-count">{{ cat_posts.size }} post{% if cat_posts.size != 1 %}s{% endif %}</span>
+    <span class="category-arrow">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </span>
+  </summary>
 
-<div class="category-posts">
-  {% for post in cat_posts %}
-    {% include post-card.html post=post %}
-  {% endfor %}
-</div>
+  <div class="category-posts">
+    {% for post in cat_posts %}
+      {% include post-card.html post=post %}
+    {% endfor %}
+  </div>
+</details>
 {% endfor %}
