@@ -1,0 +1,57 @@
+---
+layout: default
+---
+
+<article class="post-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/categories/#{{ page.category | slugify }}">{{ page.category }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ page.title }}</span>
+  </nav>
+
+  <div class="post-meta">
+    <span class="category-badge category--{{ page.category | slugify }}">{{ page.category }}</span>
+    <span class="post-date">{{ page.date | date: "%B %d, %Y" }}</span>
+    {% if page.difficulty %}
+    <span class="difficulty-badge difficulty--{{ page.difficulty | downcase }}">{{ page.difficulty }}</span>
+    {% endif %}
+  </div>
+
+  <h1 class="post-title">{{ page.title }}</h1>
+
+  {% if page.tags.size > 0 %}
+  <div class="post-tags">
+    {% for tag in page.tags %}
+    <a href="/tags/#{{ tag | slugify }}" class="tag-chip">{{ tag }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <hr class="divider">
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <nav class="post-nav">
+    {% if page.previous %}
+    <a href="{{ page.previous.url | relative_url }}" class="post-nav-link post-nav-prev">
+      <span class="post-nav-label">&larr; Previous</span>
+      <span class="post-nav-title">{{ page.previous.title }}</span>
+    </a>
+    {% else %}
+    <span class="post-nav-link post-nav-prev disabled"></span>
+    {% endif %}
+
+    {% if page.next %}
+    <a href="{{ page.next.url | relative_url }}" class="post-nav-link post-nav-next">
+      <span class="post-nav-label">Next &rarr;</span>
+      <span class="post-nav-title">{{ page.next.title }}</span>
+    </a>
+    {% else %}
+    <span class="post-nav-link post-nav-next disabled"></span>
+    {% endif %}
+  </nav>
+</article>

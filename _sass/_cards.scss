@@ -1,0 +1,233 @@
+.post-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  gap: 20px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.post-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.card-body {
+  min-width: 0;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.category-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.category--tryhackme {
+  background: #ff3e4d;
+  color: white;
+}
+
+.category--hackthebox {
+  background: #9fef00;
+  color: #1a2332;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.difficulty-badge {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  line-height: 1.4;
+  background: transparent;
+}
+
+.difficulty--easy {
+  color: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+.difficulty--medium {
+  color: #f97316;
+  border: 1px solid #f97316;
+}
+
+.difficulty--hard {
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.difficulty--insane {
+  color: #a855f7;
+  border: 1px solid #a855f7;
+}
+
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.card-title a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.card-title a:hover {
+  color: var(--accent);
+}
+
+.card-excerpt {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-chip {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.tag-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(124, 58, 237, 0.08);
+  text-decoration: none;
+}
+
+.card-thumbnail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.post-card:hover .card-thumbnail {
+  opacity: 0.6;
+  color: var(--accent);
+}
+
+// Category rows for categories page
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.category-row:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+  text-decoration: none;
+}
+
+.category-row .folder-icon {
+  color: var(--accent);
+  display: flex;
+}
+
+.category-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.post-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.category-arrow {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+}
+
+.category-posts {
+  margin: 12px 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// Tags page
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.tag-section {
+  margin-bottom: 32px;
+}
+
+.tag-section h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .post-card {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .card-thumbnail {
+    display: none;
+  }
+}

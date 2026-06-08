@@ -1,12 +1,13 @@
 ---
-title: TryHackMe - Mr. Robot Walkthrough
+layout: post
+title: "TryHackMe - Mr. Robot Walkthrough"
 date: 2026-06-08
-tags: web, privesc, wordpress, linux, thm, oscp-style
+category: TryHackMe
 difficulty: Medium
-summary: A comprehensive walkthrough of the Mr. Robot CTF challenge on TryHackMe covering Nmap scans, WordPress enumeration, credential cracking, and Linux privilege escalation.
+tags: [web, privesc, wordpress, linux, thm, oscp-style]
+excerpt: "A comprehensive walkthrough of the Mr. Robot CTF covering Nmap scans, WordPress enumeration, credential cracking, and Linux privilege escalation."
+thumbnail: crosshair
 ---
-
-# TryHackMe: Mr. Robot Walkthrough
 
 This is a walkthrough for the **Mr. Robot** room on TryHackMe. This machine is inspired by the Mr. Robot show and has three hidden keys that we need to find. Let's get started!
 
@@ -24,7 +25,6 @@ The output of the scan shows two ports open:
 - `80/tcp` - HTTP (Apache httpd)
 - `443/tcp` - HTTPS (Apache httpd)
 
-> [!NOTE]
 > Standard SSL/TLS settings are present, and SSH (port 22) appears to be closed or filtered on this machine.
 
 ---

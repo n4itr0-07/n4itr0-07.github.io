@@ -1,12 +1,13 @@
 ---
-title: HackTheBox - Legacy Walkthrough
+layout: post
+title: "HackTheBox - Legacy Walkthrough"
 date: 2026-06-07
-tags: smb, windows, ms08-067, ms17-010, htb, oscp-style
+category: HackTheBox
 difficulty: Easy
-summary: Walkthrough of Legacy on HackTheBox. This is a classic Windows XP machine vulnerable to MS08-067 and MS17-010 (EternalBlue).
+tags: [smb, windows, ms08-067, ms17-010, htb, oscp-style]
+excerpt: "Walkthrough of Legacy on HackTheBox. A classic Windows XP machine vulnerable to MS08-067 and MS17-010 (EternalBlue)."
+thumbnail: shield
 ---
-
-# HackTheBox: Legacy Walkthrough
 
 **Legacy** is an extremely simple machine on HackTheBox that runs Windows XP. It has two well-known vulnerabilities: MS08-067 and MS17-010.
 

@@ -1,0 +1,28 @@
+---
+layout: default
+---
+
+<div class="page-header">
+  <h1>Tags</h1>
+</div>
+
+<div class="tag-cloud tag-cloud-header">
+  {% for tag in site.tags %}
+  <a href="#{{ tag[0] | slugify }}" class="tag-chip">
+    {{ tag[0] }}<sup>{{ tag[1].size }}</sup>
+  </a>
+  {% endfor %}
+</div>
+
+{% for tag in site.tags %}
+{% assign tag_name = tag[0] %}
+{% assign tag_posts = tag[1] %}
+
+<h2 class="tag-section-heading" id="{{ tag_name | slugify }}">{{ tag_name }}</h2>
+
+<div class="tag-section-posts">
+  {% for post in tag_posts %}
+    {% include post-card.html post=post %}
+  {% endfor %}
+</div>
+{% endfor %}

@@ -1,0 +1,40 @@
+title: n4itr0-07
+description: CTF Writeups & Security Research
+url: "https://n4itr0-07.github.io"
+baseurl: ""
+author:
+  name: n4itr0-07
+  github: n4itr0-07
+
+permalink: /:categories/:title/
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-paginate
+
+paginate: 10
+paginate_path: "/page/:num/"
+
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    block:
+      line_numbers: false

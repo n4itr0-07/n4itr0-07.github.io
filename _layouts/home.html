@@ -1,0 +1,54 @@
+---
+layout: default
+---
+
+<div class="home-layout">
+  <div class="posts-feed">
+    {% for post in paginator.posts %}
+      {% include post-card.html post=post %}
+    {% endfor %}
+
+    {% if paginator.total_pages > 1 %}
+    <nav class="pagination">
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path | relative_url }}" class="pagination-link pagination-prev">&laquo; Newer</a>
+      {% else %}
+        <span class="pagination-link pagination-prev disabled">&laquo; Newer</span>
+      {% endif %}
+
+      <span class="pagination-info">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+
+      {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path | relative_url }}" class="pagination-link pagination-next">Older &raquo;</a>
+      {% else %}
+        <span class="pagination-link pagination-next disabled">Older &raquo;</span>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+
+  <aside class="right-sidebar">
+    <div class="sidebar-section">
+      <h3 class="sidebar-heading">Recently Updated</h3>
+      <ul class="recent-posts-list">
+        {% for post in site.posts limit:3 %}
+        <li>
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          <span class="recent-post-date">{{ post.date | date: "%b %d, %Y" }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-heading">Trending Tags</h3>
+      <div class="tag-cloud">
+        {% for tag in site.tags %}
+        <a href="/tags/#{{ tag[0] | slugify }}" class="tag-pill">
+          {{ tag[0] }}<sup>{{ tag[1].size }}</sup>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </aside>
+</div>
