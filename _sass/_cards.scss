@@ -98,9 +98,14 @@
   transition: color 0.15s ease;
 }
 
+.card-title a:visited {
+  color: var(--text);
+}
+
 .card-title a:hover {
   color: var(--accent);
 }
+
 
 .card-excerpt {
   font-size: 0.875rem;
@@ -115,7 +120,8 @@
   gap: 6px;
 }
 
-.tag-chip {
+.tag-chip,
+.tag-chip:visited {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
@@ -152,6 +158,21 @@
   color: white;
   opacity: 1;
 }
+
+.tag-chip.active,
+.tag-chip.active:visited {
+  border-color: var(--accent);
+  color: white;
+  background: var(--accent);
+}
+
+.tag-chip.active .tag-count,
+.tag-chip.active:visited .tag-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+
 
 
 .card-thumbnail {

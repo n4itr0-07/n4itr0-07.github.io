@@ -60,6 +60,10 @@
   border-left: 3px solid transparent;
 }
 
+.nav-item a:visited {
+  color: var(--text-muted);
+}
+
 .nav-item a:hover {
   background: var(--surface-2);
   color: var(--text);
@@ -71,6 +75,11 @@
   color: var(--text);
   border-left-color: var(--accent);
 }
+
+.nav-item.active a:visited {
+  color: var(--text);
+}
+
 
 .sidebar-footer {
   margin-top: auto;

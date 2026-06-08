@@ -276,6 +276,10 @@
   .post-title {
     font-size: 1.5rem;
   }
+  .breadcrumb-sep:last-of-type,
+  .breadcrumb-current {
+    display: none;
+  }
   .post-nav {
     flex-direction: column;
   }
@@ -283,3 +287,4 @@
     max-width: 100%;
   }
 }
+

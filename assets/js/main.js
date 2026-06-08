@@ -79,15 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ─── Post Card Click Handler ──────────────────────────────────
+  document.querySelectorAll('.post-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a') || e.target.closest('button')) return;
+      const link = card.querySelector('.card-title a');
+      if (link) link.click();
+    });
+  });
+
   // ─── Mobile Sidebar Toggle ────────────────────────────────────
-  const hamburger = document.getElementById('mobile-menu-btn');
+  const hamburger = document.querySelector('.mobile-menu-btn');
+
   const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
+  const overlay = document.querySelector('.mobile-overlay');
 
   if (hamburger && sidebar) {
     hamburger.addEventListener('click', () => {
       sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
+      if (overlay) overlay.classList.toggle('active');
       document.body.classList.toggle('sidebar-open');
     });
     if (overlay) {
@@ -104,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     anchor.addEventListener('click', (e) => {
       const targetId = anchor.getAttribute('href');
       if (targetId === '#') return;
+      if (anchor.hasAttribute('data-tag-filter')) return; // Let hashchange handle it
       const target = document.querySelector(targetId);
       if (target) {
         e.preventDefault();
@@ -139,4 +150,161 @@ document.addEventListener('DOMContentLoaded', () => {
 
     sections.forEach(section => observer.observe(section));
   }
+
+  // ─── Global Search Logic ──────────────────────────────────────
+  const searchInput = document.getElementById('global-search-input');
+  const searchResults = document.getElementById('global-search-results');
+  let searchIndex = null;
+
+  if (searchInput && searchResults) {
+    const fetchSearchIndex = async () => {
+      if (searchIndex) return;
+      try {
+        const response = await fetch('/search.json');
+        if (response.ok) {
+          searchIndex = await response.json();
+        }
+      } catch (err) {
+        console.error('Failed to fetch search index:', err);
+      }
+    };
+
+    searchInput.addEventListener('focus', fetchSearchIndex);
+
+    searchInput.addEventListener('input', async () => {
+      await fetchSearchIndex();
+      const query = searchInput.value.toLowerCase().trim();
+      
+      if (!query) {
+        searchResults.classList.remove('active');
+        searchResults.innerHTML = '';
+        return;
+      }
+
+      if (!searchIndex) return;
+
+      const filtered = searchIndex.filter(post => {
+        return (
+          post.title.toLowerCase().includes(query) ||
+          post.summary.toLowerCase().includes(query) ||
+          post.category.toLowerCase().includes(query) ||
+          post.tags.some(tag => tag.toLowerCase().includes(query))
+        );
+      });
+
+      searchResults.classList.add('active');
+
+      if (filtered.length === 0) {
+        searchResults.innerHTML = '<div class="search-no-results">No writeups found.</div>';
+        return;
+      }
+
+      searchResults.innerHTML = filtered.map(post => `
+        <a href="${post.url}" class="search-result-item">
+          <span class="search-result-title">${post.title}</span>
+          <span class="search-result-meta">
+            <span>${post.category}</span>
+            <span>${post.date}</span>
+          </span>
+        </a>
+      `).join('');
+    });
+
+    // Close dropdown on click outside
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.remove('active');
+      }
+    });
+  }
+
+  // ─── Multi-Select Tag Filtering (Tags Page) ───────────────────
+  const tagChips = document.querySelectorAll('[data-tag-filter]');
+  const tagGroups = document.querySelectorAll('.tag-section-group');
+
+  if (tagChips.length > 0 && tagGroups.length > 0) {
+    let selectedTags = [];
+
+    const updateTagFilter = () => {
+      // 1. Update visual active states of chips
+      tagChips.forEach(chip => {
+        const tag = chip.getAttribute('data-tag-filter');
+        if (tag === 'all') {
+          chip.classList.toggle('active', selectedTags.length === 0);
+        } else {
+          chip.classList.toggle('active', selectedTags.includes(tag));
+        }
+      });
+
+      // 2. Filter posts and hide empty sections
+      tagGroups.forEach(group => {
+        let visibleCount = 0;
+        const cards = group.querySelectorAll('.post-card');
+
+        cards.forEach(card => {
+          const cardTagsAttr = card.getAttribute('data-tags');
+          const cardTags = cardTagsAttr ? cardTagsAttr.split(',') : [];
+          
+          // Post must contain ALL selected tags
+          const matches = selectedTags.every(tag => cardTags.includes(tag));
+
+          if (matches) {
+            card.style.display = 'grid';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Hide whole section if no posts match the query
+        if (visibleCount > 0) {
+          group.style.display = 'block';
+        } else {
+          group.style.display = 'none';
+        }
+      });
+    };
+
+    const parseHash = () => {
+      const hash = window.location.hash.slice(1);
+      if (!hash || hash === 'all') {
+        selectedTags = [];
+      } else {
+        selectedTags = hash.split('+').filter(t => t.length > 0);
+      }
+      updateTagFilter();
+    };
+
+    tagChips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tag = chip.getAttribute('data-tag-filter');
+        
+        if (tag === 'all') {
+          selectedTags = [];
+        } else {
+          if (selectedTags.includes(tag)) {
+            selectedTags = selectedTags.filter(t => t !== tag);
+          } else {
+            selectedTags.push(tag);
+          }
+        }
+
+        // Update URL hash without reload
+        if (selectedTags.length > 0) {
+          history.replaceState(null, null, '#' + selectedTags.join('+'));
+        } else {
+          history.replaceState(null, null, '#all');
+        }
+
+        updateTagFilter();
+      });
+    });
+
+    // Handle hash change and page load
+    window.addEventListener('hashchange', parseHash);
+    parseHash();
+  }
 });
+
+
