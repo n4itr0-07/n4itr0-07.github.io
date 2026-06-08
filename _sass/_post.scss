@@ -56,10 +56,11 @@
   margin-bottom: 32px;
 }
 
-// Post content typography
 .post-content {
   font-size: 1rem;
   line-height: 1.8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   h2 {
     font-family: 'JetBrains Mono', monospace;
@@ -223,9 +224,10 @@
   font-weight: 500;
 }
 
-.post-nav .next {
+.post-nav-next {
   margin-left: auto;
   text-align: right;
+  align-items: flex-end;
 }
 
 // About page
@@ -286,5 +288,131 @@
   .post-nav a {
     max-width: 100%;
   }
+  .post-content table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// Two-column layout for post page & TOC sidebar
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+  .post-layout {
+    grid-template-columns: 1fr;
+    max-width: 780px;
+  }
+  .post-toc-sidebar {
+    display: none !important;
+  }
+}
+
+.post-toc-sidebar {
+  position: sticky;
+  top: 40px;
+  height: fit-content;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.post-toc {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.post-toc-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-toc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.toc-step-check {
+  accent-color: var(--accent);
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.post-toc-item.completed .post-toc-link {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.post-toc-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  display: block;
+  border-left: 2px solid transparent;
+  padding-left: 8px;
+  flex: 1;
+}
+
+.post-toc-link:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.post-toc-item.level-3 {
+  padding-left: 12px;
+}
+
+.post-toc-item.active .post-toc-link {
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+
+// GFM interactive checklists
+.post-content li.task-list-item {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.post-content li.task-list-item input[type="checkbox"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.post-content li.task-list-item.checked {
+  text-decoration: line-through;
+  color: var(--text-muted);
 }
 

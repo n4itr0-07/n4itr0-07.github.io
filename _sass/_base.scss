@@ -33,6 +33,18 @@ a:hover {
   text-decoration-thickness: 1.5px;
 }
 
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(to right, var(--accent), var(--accent-green));
+  z-index: 10000;
+  box-shadow: 0 1px 10px rgba(124, 58, 237, 0.4);
+  pointer-events: none;
+  transition: width 0.1s ease-out;
+}
 
 // Layout
 .layout {
@@ -259,7 +271,7 @@ a:hover {
 
 #global-search-input {
   width: 100%;
-  padding: 8px 12px 8px 36px;
+  padding: 8px 36px 8px 36px;
   font-family: 'Ubuntu', sans-serif;
   font-size: 0.875rem;
   background: var(--surface);
@@ -275,6 +287,11 @@ a:hover {
   box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
+#global-search-input:focus ~ .search-hotkey {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .search-container::before {
   content: "";
   position: absolute;
@@ -288,6 +305,24 @@ a:hover {
   background-repeat: no-repeat;
   opacity: 0.7;
   pointer-events: none;
+}
+
+.search-hotkey {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  pointer-events: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.15s ease;
+  line-height: 1.4;
 }
 
 .search-results-dropdown {
@@ -366,6 +401,12 @@ a:hover {
   .search-container {
     flex: 1;
     width: 100%;
+  }
+  #global-search-input {
+    padding-right: 12px;
+  }
+  .search-hotkey {
+    display: none !important;
   }
   .search-results-dropdown {
     width: 100%;

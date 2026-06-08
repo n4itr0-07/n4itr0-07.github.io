@@ -24,8 +24,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Code Block Enhancement ───────────────────────────────────
   document.querySelectorAll('div.highlight').forEach(block => {
     const code = block.querySelector('code');
-    const langClass = code ? [...code.classList].find(c => c.startsWith('language-')) : null;
-    const lang = langClass ? langClass.replace('language-', '') : 'code';
+    
+    // Find language class by checking code element, pre element, the block, or the block's parent wrapper
+    let lang = 'code';
+    const elementsToCheck = [
+      code,
+      block.querySelector('pre'),
+      block,
+      block.parentElement
+    ];
+    for (const el of elementsToCheck) {
+      if (el) {
+        const found = [...el.classList].find(c => c.startsWith('language-'));
+        if (found) {
+          lang = found.replace('language-', '');
+          break;
+        }
+      }
+    }
+
+    if (lang === 'plaintext') {
+      lang = 'text';
+    }
 
     const langColors = {
       bash: '#22c55e', shell: '#22c55e', sh: '#22c55e',
@@ -210,6 +230,22 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('');
     });
 
+    // Keyboard shortcuts for search
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+        if (e.key === 'Escape' && document.activeElement === searchInput) {
+          searchInput.blur();
+          searchResults.classList.remove('active');
+        }
+        return;
+      }
+
+      if (e.key === '/') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
     // Close dropdown on click outside
     document.addEventListener('click', (e) => {
       if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
@@ -305,6 +341,128 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('hashchange', parseHash);
     parseHash();
   }
+
+  // ─── Reading Progress Bar ──────────────────────────────────────
+  const progressBar = document.getElementById('reading-progress');
+  if (progressBar) {
+    if (document.querySelector('.post-page')) {
+      const updateProgressBar = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = Math.min(100, Math.max(0, progress)) + '%';
+      };
+      window.addEventListener('scroll', updateProgressBar, { passive: true });
+      window.addEventListener('resize', updateProgressBar, { passive: true });
+      updateProgressBar();
+    } else {
+      progressBar.style.display = 'none';
+    }
+  }
+
+  // ─── Table of Contents (TOC) ───────────────────────────────────
+  const tocList = document.getElementById('post-toc-list');
+  const tocSidebar = document.querySelector('.post-toc-sidebar');
+  const postPage = document.querySelector('.post-page');
+  
+  if (tocList && postPage) {
+    const headers = Array.from(postPage.querySelectorAll('.post-content h2, .post-content h3'));
+    
+    if (headers.length < 2) {
+      if (tocSidebar) tocSidebar.style.display = 'none';
+    } else {
+      headers.forEach((header, index) => {
+        if (!header.id) {
+          header.id = header.textContent.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+        }
+        
+        const li = document.createElement('li');
+        li.className = `post-toc-item level-${header.tagName.toLowerCase() === 'h3' ? '3' : '2'}`;
+        
+        // Add step checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'toc-step-check';
+        checkbox.setAttribute('aria-label', `Mark ${header.textContent.trim()} as completed`);
+        
+        // Load state
+        const storageKey = `${window.location.pathname}-toc-${index}`;
+        const isCompleted = localStorage.getItem(storageKey) === 'true';
+        checkbox.checked = isCompleted;
+        if (isCompleted) {
+          li.classList.add('completed');
+        }
+        
+        checkbox.addEventListener('change', () => {
+          localStorage.setItem(storageKey, checkbox.checked);
+          li.classList.toggle('completed', checkbox.checked);
+        });
+        
+        const a = document.createElement('a');
+        a.href = `#${header.id}`;
+        a.className = 'post-toc-link';
+        a.textContent = header.textContent.replace(/^~\s*/, '').replace(/#+/, '').trim();
+        
+        li.appendChild(checkbox);
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+      
+      const tocItems = tocList.querySelectorAll('.post-toc-item');
+      const observerOptions = {
+        rootMargin: '-80px 0px -60% 0px',
+        threshold: 0
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const activeId = entry.target.id;
+            tocItems.forEach(item => {
+              const link = item.querySelector('a');
+              if (link && link.getAttribute('href') === `#${activeId}`) {
+                item.classList.add('active');
+                if (tocSidebar) {
+                  const itemTop = item.offsetTop;
+                  const sidebarHeight = tocSidebar.offsetHeight;
+                  if (itemTop > tocSidebar.scrollTop + sidebarHeight || itemTop < tocSidebar.scrollTop) {
+                    tocSidebar.scrollTop = itemTop - sidebarHeight / 2;
+                  }
+                }
+              } else {
+                item.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, observerOptions);
+      
+      headers.forEach(header => observer.observe(header));
+    }
+  }
+
+  // ─── Interactive GFM Checklists ───────────────────────────────
+  const gfmCheckboxes = document.querySelectorAll('.post-content input[type="checkbox"]');
+  gfmCheckboxes.forEach((checkbox, index) => {
+    checkbox.removeAttribute('disabled');
+    const storageKey = `${window.location.pathname}-gfm-${index}`;
+    
+    const isChecked = localStorage.getItem(storageKey) === 'true';
+    checkbox.checked = isChecked;
+    
+    const li = checkbox.closest('li');
+    if (li) {
+      li.classList.add('task-list-item');
+      li.classList.toggle('checked', isChecked);
+    }
+    
+    checkbox.addEventListener('change', () => {
+      localStorage.setItem(storageKey, checkbox.checked);
+      if (li) {
+        li.classList.toggle('checked', checkbox.checked);
+      }
+    });
+  });
 });
 
 
