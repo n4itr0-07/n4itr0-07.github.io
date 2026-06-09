@@ -4,6 +4,23 @@ layout: default
 
 <div class="home-layout">
   <div class="posts-feed">
+    <!-- Homepage Live Feed Filters -->
+    <div class="feed-filters">
+      <div class="filter-group">
+        <span class="filter-label">Difficulty:</span>
+        <button class="filter-btn active" data-filter-difficulty="all">All</button>
+        <button class="filter-btn" data-filter-difficulty="easy">Easy</button>
+        <button class="filter-btn" data-filter-difficulty="medium">Medium</button>
+        <button class="filter-btn" data-filter-difficulty="hard">Hard</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Platform:</span>
+        <button class="filter-btn active" data-filter-platform="all">All</button>
+        <button class="filter-btn" data-filter-platform="tryhackme">TryHackMe</button>
+        <button class="filter-btn" data-filter-platform="hackthebox">Hack The Box</button>
+      </div>
+    </div>
+
     {% for post in paginator.posts %}
       {% include post-card.html post=post %}
     {% endfor %}

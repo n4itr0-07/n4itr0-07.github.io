@@ -1,4 +1,4 @@
-<article class="post-card" data-tags="{% for tag in include.post.tags %}{{ tag | slugify }}{% unless forloop.last %},{% endunless %}{% endfor %}">
+<article class="post-card" data-tags="{% for tag in include.post.tags %}{{ tag | slugify }}{% unless forloop.last %},{% endunless %}{% endfor %}" data-difficulty="{{ include.post.difficulty | downcase }}" data-category="{{ include.post.category | slugify }}">
 
   <div class="card-body">
     <div class="card-meta">
@@ -7,6 +7,10 @@
       {% if include.post.difficulty %}
         <span class="difficulty-badge difficulty--{{ include.post.difficulty | downcase }}">{{ include.post.difficulty }}</span>
       {% endif %}
+      <span class="read-time">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        {{ include.post.content | number_of_words | divided_by: 180 | plus: 1 }} min read
+      </span>
     </div>
     <h2 class="card-title"><a href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a></h2>
     <p class="card-excerpt">{{ include.post.excerpt | strip_html | truncatewords: 30 }}</p>

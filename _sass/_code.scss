@@ -4,6 +4,8 @@
   overflow: hidden;
   margin: 1.5rem 0;
   font-family: 'JetBrains Mono', monospace;
+  width: 100%;
+  max-width: 100%;
 }
 
 .code-header {
@@ -118,3 +120,80 @@ div.highlight {
   .m, .mi, .mf, .mh, .il { color: #005cc5; }
   .p { color: #24292e; }
 }
+
+// Collapsible Code Blocks
+.code-block {
+  position: relative;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.code-block.collapsible.collapsed {
+  max-height: none;
+  
+  div.highlight {
+    max-height: 280px;
+    overflow: hidden;
+  }
+}
+
+.code-block.collapsible.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 36px; /* Height of toggle bar */
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.code-block.collapsible:not(.collapsed)::after {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.code-collapse-toggle {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background: #111114;
+  border-top: 1px solid var(--border);
+  padding: 8px;
+  z-index: 3;
+}
+
+[data-theme="light"] .code-collapse-toggle {
+  background: #e5e5e8;
+}
+
+.collapse-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 4px 16px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+
+.collapse-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-2);
+}
+
+// Shell prompt unselectable styling
+.shell-prompt {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  opacity: 0.55;
+  font-weight: bold;
+}
+

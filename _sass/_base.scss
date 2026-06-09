@@ -187,7 +187,7 @@ a:hover {
 }
 
 
-.sidebar-overlay {
+.mobile-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -196,7 +196,7 @@ a:hover {
   backdrop-filter: blur(4px);
 }
 
-.sidebar-overlay.active {
+.mobile-overlay.active {
   display: block;
 }
 
@@ -410,6 +410,89 @@ a:hover {
   }
   .search-results-dropdown {
     width: 100%;
+  }
+}
+
+// Floating Back-to-Top Button
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  outline: none;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--accent-glow);
+}
+
+.back-to-top-progress {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.back-to-top-progress-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2px;
+}
+
+.back-to-top-progress-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-dasharray: 100.53; // 2 * pi * r = 2 * 3.14159 * 16 = 100.53
+  stroke-dashoffset: 100.53;
+  transition: stroke-dashoffset 0.1s ease-out;
+}
+
+.back-to-top-icon {
+  width: 16px;
+  height: 16px;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.back-to-top:hover .back-to-top-icon {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
+  .back-to-top-progress {
+    top: 1px;
+    left: 1px;
   }
 }
 

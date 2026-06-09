@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
       lang = 'text';
     }
 
+    if (code && ['bash', 'sh', 'shell', 'cmd'].includes(lang)) {
+      const updatedHTML = code.innerHTML.replace(/(^|\n)([\w.-]+@[\w.-]+[:~][\w/.-]*\s*[\$#]\s*|[\$#]\s+)/g, '$1<span class="shell-prompt">$2</span>');
+      code.innerHTML = updatedHTML;
+    }
+
     const langColors = {
       bash: '#22c55e', shell: '#22c55e', sh: '#22c55e',
       python: '#3b82f6', py: '#3b82f6',
@@ -78,6 +83,29 @@ document.addEventListener('DOMContentLoaded', () => {
     block.parentNode.insertBefore(wrapper, block);
     wrapper.appendChild(header);
     wrapper.appendChild(block);
+
+    if (code) {
+      const codeLines = code.innerText.trim().split('\n').length;
+      if (codeLines > 15) {
+        wrapper.classList.add('collapsible', 'collapsed');
+        
+        const toggleBar = document.createElement('div');
+        toggleBar.className = 'code-collapse-toggle';
+        toggleBar.innerHTML = `<button class="collapse-btn" aria-label="Show more lines of code">Show More</button>`;
+        
+        const btn = toggleBar.querySelector('.collapse-btn');
+        btn.addEventListener('click', () => {
+          const isCollapsed = wrapper.classList.toggle('collapsed');
+          btn.textContent = isCollapsed ? 'Show More' : 'Show Less';
+          btn.setAttribute('aria-label', isCollapsed ? 'Show more lines of code' : 'Show fewer lines of code');
+          if (isCollapsed) {
+            wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+        
+        wrapper.appendChild(toggleBar);
+      }
+    }
   });
 
   // ─── Copy Button Handler ──────────────────────────────────────
@@ -86,7 +114,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!btn) return;
     const code = btn.closest('.code-block').querySelector('code');
     if (!code) return;
-    navigator.clipboard.writeText(code.innerText).then(() => {
+    let textToCopy = '';
+    if (code.querySelector('.shell-prompt')) {
+      const clone = code.cloneNode(true);
+      clone.querySelectorAll('.shell-prompt').forEach(el => el.remove());
+      textToCopy = clone.innerText;
+    } else {
+      textToCopy = code.innerText;
+    }
+    
+    textToCopy = textToCopy.replace(/\r\n/g, '\n');
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
       const originalHTML = btn.innerHTML;
       btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
       btn.style.color = '#22c55e';
@@ -462,6 +501,119 @@ document.addEventListener('DOMContentLoaded', () => {
         li.classList.toggle('checked', checkbox.checked);
       }
     });
+  });
+
+  // ─── Radial Back to Top Button ─────────────────────────────────
+  const backToTopBtn = document.getElementById('back-to-top');
+  const progressFill = document.querySelector('.back-to-top-progress-fill');
+  
+  if (backToTopBtn) {
+    const radius = 16;
+    const circumference = 2 * Math.PI * radius;
+    
+    if (progressFill) {
+      progressFill.style.strokeDasharray = circumference;
+      progressFill.style.strokeDashoffset = circumference;
+    }
+
+    const updateScrollProgress = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      
+      if (scrollTop > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+      
+      if (progressFill && docHeight > 0) {
+        const progress = scrollTop / docHeight;
+        const offset = circumference - (progress * circumference);
+        progressFill.style.strokeDashoffset = offset;
+      }
+    };
+    
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', updateScrollProgress, { passive: true });
+    updateScrollProgress();
+  }
+
+  // ─── Homepage Live Feed Filters ────────────────────────────────
+  const filterButtons = document.querySelectorAll('[data-filter-difficulty], [data-filter-platform]');
+  const postCards = document.querySelectorAll('.posts-feed .post-card');
+  
+  if (filterButtons.length > 0 && postCards.length > 0) {
+    let activeDifficulty = 'all';
+    let activePlatform = 'all';
+    
+    const filterFeed = () => {
+      postCards.forEach(card => {
+        const diff = card.getAttribute('data-difficulty') || '';
+        const plat = card.getAttribute('data-category') || '';
+        
+        const matchDiff = (activeDifficulty === 'all' || diff === activeDifficulty);
+        const matchPlat = (activePlatform === 'all' || plat === activePlatform);
+        
+        if (matchDiff && matchPlat) {
+          card.style.display = 'grid';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    };
+    
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.parentElement;
+        group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        if (btn.hasAttribute('data-filter-difficulty')) {
+          activeDifficulty = btn.getAttribute('data-filter-difficulty');
+        }
+        if (btn.hasAttribute('data-filter-platform')) {
+          activePlatform = btn.getAttribute('data-filter-platform');
+        }
+        
+        filterFeed();
+      });
+    });
+  }
+
+  // ─── Visited / Solved Status Indicator ─────────────────────────
+  if (document.querySelector('.post-page')) {
+    const solvedKey = `solved-${window.location.pathname}`;
+    localStorage.setItem(solvedKey, 'true');
+  }
+
+  document.querySelectorAll('.post-card').forEach(card => {
+    const link = card.querySelector('.card-title a');
+    if (link) {
+      let path = '';
+      try {
+        path = new URL(link.href).pathname;
+      } catch (e) {
+        path = link.getAttribute('href');
+      }
+      
+      const solvedKey = `solved-${path}`;
+      if (localStorage.getItem(solvedKey) === 'true') {
+        const meta = card.querySelector('.card-meta');
+        if (meta && !meta.querySelector('.solved-badge')) {
+          const solvedBadge = document.createElement('span');
+          solvedBadge.className = 'solved-badge';
+          solvedBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><polyline points="20 6 9 17 4 12"/></svg> SOLVED`;
+          meta.appendChild(solvedBadge);
+        }
+      }
+    }
   });
 });
 
